@@ -94,12 +94,14 @@ ejecutar_opcion(4) :-
     write("A que lugar deseas moverte? "),
     read(Lugar),
     mover(Lugar), !.
-ejecutar_opcion(5) :- write("Funcion 'donde_esta' aun no implementada."), nl, !.
+ejecutar_opcion(5) :-
+    donde_esta, !.
 ejecutar_opcion(6) :-
     mostrar_inventario,
     mostrar_opciones,
     !.
-ejecutar_opcion(7) :- write("Funcion 'lugares_visitados' aun no implementada."), nl, !.
+ejecutar_opcion(7) :-
+    lugares_visitados, !.
 ejecutar_opcion(8) :- write("Funcion 'ruta' aun no implementada."), nl, !.
 ejecutar_opcion(9) :- write("Funcion 'como_gano' aun no implementada."), nl, !.
 ejecutar_opcion(10) :- write("Funcion 'verifica_gane' aun no implementada."), nl, !.

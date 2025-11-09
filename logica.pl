@@ -158,3 +158,44 @@ mover(Lugar) :-
     \+ conectado(Actual, Lugar),
     \+ conectado(Lugar, Actual),
     format("No hay un camino directo desde ~w hacia ~w.~n", [Actual, Lugar]), !.
+
+% ====== Mostrar donde estan todos los objetos ======
+% Entradas: Ninguna
+% Salidas: Lista de todos los objetos con su ubicacion y estado
+% Restricciones: Ninguna
+donde_esta :-
+    write("Ubicacion de objetos:"), nl,
+    findall(Obj-Lugar, objeto(Obj, Lugar), Objetos),
+    mostrar_ubicacion_objetos(Objetos).
+
+% ====== Auxiliar para mostrar ubicacion de cada objeto ======
+% Entradas: Lista de objetos con su ubicacion
+% Salidas: Muestra cada objeto indicando si esta en inventario o no
+% Restricciones: Ninguna
+mostrar_ubicacion_objetos([]).
+mostrar_ubicacion_objetos([Obj-Lugar|Resto]) :-
+    inventario(Inv),
+    (member(Obj, Inv) ->
+        format("  - ~w se encuentra en ~w (encontrado)~n", [Obj, Lugar])
+    ;
+        format("  - ~w se encuentra en ~w (no encontrado)~n", [Obj, Lugar])
+    ),
+    mostrar_ubicacion_objetos(Resto).
+
+% ====== Mostrar lugares visitados ======
+% Entradas: Ninguna
+% Salidas: Lista de todos los lugares que el jugador ha visitado
+% Restricciones: Ninguna
+lugares_visitados :-
+    write("Lugares visitados:"), nl,
+    findall(L, visitado(L), Lugares),
+    mostrar_lista_lugares(Lugares).
+
+% ====== Auxiliar para mostrar lista de lugares ======
+% Entradas: Lista de lugares
+% Salidas: Imprime cada lugar visitado
+% Restricciones: Ninguna
+mostrar_lista_lugares([]).
+mostrar_lista_lugares([Lugar|Resto]) :-
+    format("  - ~w~n", [Lugar]),
+    mostrar_lista_lugares(Resto).

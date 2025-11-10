@@ -199,3 +199,66 @@ mostrar_lista_lugares([]).
 mostrar_lista_lugares([Lugar|Resto]) :-
     format("  - ~w~n", [Lugar]),
     mostrar_lista_lugares(Resto).
+
+% ====== Encontrar ruta entre dos lugares ======
+% Entradas: Lugar de inicio y lugar de destino
+% Salidas: Camino como lista de lugares desde Inicio hasta Fin
+% Restricciones: Debe existir una conexion directa o indirecta entre los lugares
+ruta(Inicio, Fin, Camino) :-
+    ruta_aux(Inicio, Fin, [Inicio], CaminoReverso),
+    reverse(CaminoReverso, Camino).
+
+% ====== Auxiliar para buscar ruta con backtracking ======
+% Entradas: Lugar actual, destino y lugares visitados en esta busqueda
+% Salidas: Camino encontrado en orden reverso
+% Restricciones: No revisitar lugares ya explorados en esta ruta
+ruta_aux(Actual, Actual, Visitados, Visitados).
+ruta_aux(Actual, Destino, Visitados, Camino) :-
+    (conectado(Actual, Siguiente) ; conectado(Siguiente, Actual)),
+    \+ member(Siguiente, Visitados),
+    ruta_aux(Siguiente, Destino, [Siguiente|Visitados], Camino).
+
+% ====== Mostrar como ganar el juego ======
+% Entradas: Ninguna
+% Salidas: Rutas posibles para llegar a cada tesoro con los requisitos
+% Restricciones: Ninguna
+como_gano :-
+    jugador(Actual),
+    write("Formas de ganar desde tu ubicacion actual:"), nl, nl,
+    findall(Lugar-Tesoro, tesoro(Lugar, Tesoro), Tesoros),
+    (Tesoros = [] ->
+        write("No hay tesoros definidos en el juego."), nl
+    ;
+        mostrar_rutas_tesoros(Tesoros, Actual)
+    ).
+
+% ====== Auxiliar para mostrar rutas a cada tesoro ======
+% Entradas: Lista de tesoros y ubicacion actual
+% Salidas: Imprime ruta y requisitos para cada tesoro
+% Restricciones: Ninguna
+mostrar_rutas_tesoros([], _).
+mostrar_rutas_tesoros([Lugar-Tesoro|Resto], Actual) :-
+    format("Tesoro: ~w en ~w~n", [Tesoro, Lugar]),
+    (ruta(Actual, Lugar, Camino) ->
+        format("  Ruta: ~w~n", [Camino]),
+        mostrar_requisitos_ruta(Camino),
+        format("  Condicion final: Llegar a ~w y obtener ~w~n", [Lugar, Tesoro])
+    ;
+        write("  No hay ruta disponible desde tu ubicacion actual."), nl
+    ),
+    nl,
+    mostrar_rutas_tesoros(Resto, Actual).
+
+% ====== Mostrar requisitos para una ruta ======
+% Entradas: Lista de lugares que forman la ruta
+% Salidas: Objetos requeridos para cada lugar
+% Restricciones: Ninguna
+mostrar_requisitos_ruta([]).
+mostrar_requisitos_ruta([_]).
+mostrar_requisitos_ruta([_|[Siguiente|Resto]]) :-
+    (requiere(Objeto, Siguiente) ->
+        format("  - Para ir a ~w necesitas: ~w (debe estar usado)~n", [Siguiente, Objeto])
+    ;
+        true
+    ),
+    mostrar_requisitos_ruta([Siguiente|Resto]).

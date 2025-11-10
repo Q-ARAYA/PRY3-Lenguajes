@@ -102,29 +102,21 @@ ejecutar_opcion(6) :-
     !.
 ejecutar_opcion(7) :-
     lugares_visitados, !.
-ejecutar_opcion(8) :- write("Funcion 'ruta' aun no implementada."), nl, !.
-ejecutar_opcion(9) :- write("Funcion 'como_gano' aun no implementada."), nl, !.
+ejecutar_opcion(8) :-
+    write("Lugar de inicio: "),
+    read(Inicio),
+    write("Lugar de destino: "),
+    read(Fin),
+    (ruta(Inicio, Fin, Camino) ->
+        format("Ruta encontrada: ~w~n", [Camino])
+    ;
+        write("No existe una ruta entre esos lugares."), nl
+    ), !.
+ejecutar_opcion(9) :-
+    como_gano, !.
 ejecutar_opcion(10) :- write("Funcion 'verifica_gane' aun no implementada."), nl, !.
 ejecutar_opcion(11) :- !.  % salir
 ejecutar_opcion(_) :-
     write("Opcion no valida. Intente de nuevo."), nl.
-
-ejecutar_opcion(8) :-
-    write("Ruta desde: "), read(Inicio),
-    write("hasta: "), read(Fin),
-    ruta(Inicio, Fin, Camino),
-    format("Ruta encontrada: ~w~n", [Camino]), !.
-
-ejecutar_opcion(9) :-
-    como_gano, !.
-
-ejecutar_opcion(10) :-
-    verifica_gane, !.
-
-ejecutar_opcion(11) :-
-    write("Gracias por jugar."), nl, halt.
-
-ejecutar_opcion(_) :-
-    write("Opcion no valida. Intenta de nuevo."), nl.
 
 

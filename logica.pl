@@ -262,3 +262,56 @@ mostrar_requisitos_ruta([_|[Siguiente|Resto]]) :-
         true
     ),
     mostrar_requisitos_ruta([Siguiente|Resto]).
+
+% ====== Verificar si el jugador ha ganado ======
+% Entradas: Ninguna
+% Salidas: Indica si gano mostrando camino inventario y condicion de victoria
+% Restricciones: Debe estar en el lugar del tesoro y tener el objeto en inventario
+verifica_gane :-
+    jugador(LugarActual),
+    inventario(Inv),
+    tesoro(LugarActual, Tesoro),
+    member(Tesoro, Inv),
+    write("========================================"), nl,
+    write("     FELICIDADES HAS GANADO EL JUEGO"), nl,
+    write("========================================"), nl, nl,
+    write("Camino realizado:"), nl,
+    findall(L, visitado(L), Lugares),
+    format("  ~w~n", [Lugares]), nl,
+    write("Inventario de objetos:"), nl,
+    format("  ~w~n", [Inv]), nl,
+    write("Condicion de victoria cumplida:"), nl,
+    format("  - Estas en ~w~n", [LugarActual]),
+    format("  - Tienes el tesoro: ~w~n", [Tesoro]), nl,
+    write("========================================"), nl, !.
+
+verifica_gane :-
+    jugador(LugarActual),
+    inventario(Inv),
+    write("Aun no has ganado el juego."), nl, nl,
+    (tesoro(_, _) ->
+        write("Condiciones para ganar:"), nl,
+        findall(Lugar-Tesoro, tesoro(Lugar, Tesoro), Tesoros),
+        verificar_condiciones_tesoros(Tesoros, LugarActual, Inv)
+    ;
+        write("No hay condiciones de victoria definidas."), nl
+    ).
+
+% ====== Auxiliar para verificar cada condicion de tesoro ======
+% Entradas: Lista de tesoros lugar actual e inventario
+% Salidas: Estado de cada condicion de victoria
+% Restricciones: Ninguna
+verificar_condiciones_tesoros([], _, _).
+verificar_condiciones_tesoros([Lugar-Tesoro|Resto], LugarActual, Inv) :-
+    format("  Tesoro ~w en ~w:~n", [Tesoro, Lugar]),
+    (LugarActual == Lugar ->
+        write("    [OK] Estas en el lugar correcto~n")
+    ;
+        format("    [X] Necesitas estar en ~w (actualmente en ~w)~n", [Lugar, LugarActual])
+    ),
+    (member(Tesoro, Inv) ->
+        write("    [OK] Tienes el tesoro~n")
+    ;
+        format("    [X] Necesitas tener ~w en tu inventario~n", [Tesoro])
+    ),
+    verificar_condiciones_tesoros(Resto, LugarActual, Inv).

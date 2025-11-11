@@ -61,7 +61,7 @@ verificar_objeto_en_lugar :-
     objeto(Objeto, Lugar),
     inventario(Inv),
     \+ member(Objeto, Inv),
-    format("¡¡Encontraste ~w!!~n", [Objeto]), !.
+    format("Encontraste ~w!!~n", [Objeto]), !.
 verificar_objeto_en_lugar.
 
 % ====== Mostrar comandos disponibles ======
@@ -70,12 +70,12 @@ verificar_objeto_en_lugar.
 % Restricciones: Ninguna
 mostrar_opciones :-
     nl, write("Opciones disponibles:"), nl,
-    write("  1. tomar objeto.                  7. lugares visitados."), nl,
-    write("  2. usar objeto.                   8. ruta(Inicio, Fin, Camino)."), nl,
-    write("  3. puedo ir (lugar).              9. como gano."), nl,
-    write("  4. moverme (lugar).               10. verificar gane."), nl,
-    write("  5. donde esta objeto.             11. salir."), nl,
-    write("  6. inventario.                  "), nl.
+    write("  1. Tomar objeto.                  7. Lugares visitados."), nl,
+    write("  2. Usar objeto.                   8. Ruta(Inicio, Fin)."), nl,
+    write("  3. Donde puedo ir?.               9. Como gano?."), nl,
+    write("  4. Moverme (lugar).               10. Verificar gane."), nl,
+    write("  5. Donde estan objetos?.          11. Salir."), nl,
+    write("  6. Inventario.                  "), nl.
 
 
 % ====== Manejador de opciones numericas ======
@@ -114,7 +114,8 @@ ejecutar_opcion(8) :-
     ), !.
 ejecutar_opcion(9) :-
     como_gano, !.
-ejecutar_opcion(10) :- write("Funcion 'verifica_gane' aun no implementada."), nl, !.
+ejecutar_opcion(10) :-
+    verifica_gane, !.
 ejecutar_opcion(11) :- !.  % salir
 ejecutar_opcion(_) :-
     write("Opcion no valida. Intente de nuevo."), nl.
